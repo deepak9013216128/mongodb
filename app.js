@@ -1,7 +1,7 @@
 const exress = require('express');
 const path = require('path');
 
-const adminRoute = require('./routes/admin');
+const admin = require('./routes/admin');
 const shopRoute = require('./routes/shop');
 
 const app = exress();
@@ -9,7 +9,7 @@ const app = exress();
 app.use(exress.urlencoded({ extended: false }));
 app.use(exress.static(path.join(__dirname, 'public')))
 
-app.use('/admin', adminRoute);
+app.use('/admin', admin.routes);
 app.use(shopRoute);
 
 app.use((req, res, next) => {
