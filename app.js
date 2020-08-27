@@ -6,7 +6,7 @@ const shopRoute = require('./routes/shop');
 
 const app = exress();
 
-app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 app.set('views', 'views')
 
 app.use(exress.urlencoded({ extended: false }));
@@ -17,7 +17,7 @@ app.use(shopRoute);
 
 app.use((req, res, next) => {
   // res.status(404).sendFile(path.join(__dirname, 'views', '404.html'))
-  res.status(404).render('404', { pageTitle: 'Page not Found' })
+  res.status(404).render('404', { pageTitle: 'Page not Found', path: req.url })
 })
 
 app.listen(3000, () => console.log('server is listening on port 3000'));
