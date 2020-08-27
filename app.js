@@ -1,8 +1,10 @@
 const exress = require('express');
 const path = require('path');
 
-const admin = require('./routes/admin');
-const shopRoute = require('./routes/shop');
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
+
+const errorController = require('./controllers/error')
 
 const app = exress();
 
@@ -12,12 +14,9 @@ app.set('views', 'views')
 app.use(exress.urlencoded({ extended: false }));
 app.use(exress.static(path.join(__dirname, 'public')))
 
-app.use('/admin', admin.routes);
-app.use(shopRoute);
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
 
-app.use((req, res, next) => {
-  // res.status(404).sendFile(path.join(__dirname, 'views', '404.html'))
-  res.status(404).render('404', { pageTitle: 'Page not Found', path: req.url })
-})
+app.use(errorController.error404)
 
 app.listen(3000, () => console.log('server is listening on port 3000'));
