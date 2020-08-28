@@ -1,1 +1,1 @@
-[{"title":"book4"},{"title":"book5"},{"title":"book3"}]
+[{"title":"The Library Book","description":"Everybody who loves books should check out The Library Book.","imageUrl":"https://images-na.ssl-images-amazon.com/images/I/91OME-jyFmL.jpg","price":"49.99"}]
