@@ -11,29 +11,45 @@ module.exports = class Cart {
 
     //Fetch the privous cart
     fs.readFile(p, (err, fileContent) => {
-      let cart = { product: [], totalPrice: 0 }
+      let cart = { products: [], totalPrice: 0 }
       if (!err) {
         cart = JSON.parse(fileContent);
       }
 
       //Analyze the product => find existing product
-      const existingProductIndex = cart.product.findIndex(prod => prod.id === id);
-      const existingProduct = cart.product[existingProductIndex];
+      const existingProductIndex = cart.products.findIndex(prod => prod.id === id);
+      const existingProduct = cart.products[existingProductIndex];
 
       //Add new product / increase the quantity
       let updateProduct;
       if (existingProduct) {
         updateProduct = { ...existingProduct }
         updateProduct.qty = updateProduct.qty + 1;
-        cart.product[existingProductIndex] = updateProduct;
+        cart.products[existingProductIndex] = updateProduct;
       } else {
         updateProduct = { id, qty: 1 }
-        cart.product = [...cart.product, updateProduct]
+        cart.products = [...cart.products, updateProduct]
       }
 
       cart.totalPrice = cart.totalPrice + +price;
 
       fs.writeFile(p, JSON.stringify(cart), err => {
+        console.log(err)
+      })
+    })
+  }
+
+  static deleteProduct(id, productPrice) {
+    fs.readFile(p, (err, fileContent) => {
+      if (err) {
+        return;
+      }
+      const updatedCart = { ...JSON.parse(fileContent) };
+      const product = updatedCart.products.find(prod => prod.id === id);
+      const productQty = product.qty;
+      updatedCart.products = updatedCart.products.filter(prod => prod.id !== id)
+      updatedCart.totalPrice = updatedCart.totalPrice - productQty * productPrice;
+      fs.writeFile(p, JSON.stringify(updatedCart), err => {
         console.log(err)
       })
     })
