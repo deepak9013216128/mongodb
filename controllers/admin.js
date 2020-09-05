@@ -31,9 +31,20 @@ exports.getEditProduct = (req, res, next) => {
   })
 }
 
+exports.postEditProduct = (req, res, next) => {
+  const { productId } = req.body;
+  const updatedTitle = req.body.title;
+  const updatedImageUrl = req.body.imageUrl;
+  const updatedPrice = req.body.price;
+  const updatedDesc = req.body.description;
+  const updateProduct = new Product(productId, updatedTitle, updatedImageUrl, updatedPrice, updatedDesc)
+  updateProduct.save();
+  res.redirect('/admin/products')
+}
+
 exports.postAddProduct = (req, res, next) => {
   const { title, imageUrl, price, description } = req.body;
-  const product = new Product(title, imageUrl, price, description)
+  const product = new Product(null, title, imageUrl, price, description)
   product.save();
   res.redirect('/');
   //next();//allow to request to continue to the next middleware in line
