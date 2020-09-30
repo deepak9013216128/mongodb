@@ -4,7 +4,8 @@ const path = require('path');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
-const errorController = require('./controllers/error')
+const errorController = require('./controllers/error');
+const mongoConnect = require('./utils/database').mongoConnect;
 
 const app = exress();
 
@@ -19,4 +20,8 @@ app.use(shopRoutes);
 
 app.use(errorController.error404)
 
-app.listen(3000, () => console.log('server is listening on port 3000'));
+mongoConnect(() => {
+  app.listen(3000, () =>
+    console.log('server is listening on port 3000')
+  );
+})

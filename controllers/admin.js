@@ -44,10 +44,14 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const { title, imageUrl, price, description } = req.body;
-  const product = new Product(null, title, imageUrl, price, description)
-  product.save();
-  res.redirect('/');
-  //next();//allow to request to continue to the next middleware in line
+  const product = new Product(title, imageUrl, price, description);
+  product
+    .save()
+    .then(() => {
+      console.log('Product Created!')
+      res.redirect('/');
+    })
+    .catch(err => console.log(err))
 }
 
 exports.getProducts = (req, res, next) => {
