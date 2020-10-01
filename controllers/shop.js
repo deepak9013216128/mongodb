@@ -7,37 +7,43 @@ const Cart = require('../models/cart');
 
 exports.getProducts = (req, res, next) => {
   // res.sendFile(path.join(rootDir, 'views', 'shop.html'))
-  Product.fetchAll(products => {
-    res.render('shop/product-list', {
-      prods: products,
-      pageTitle: 'All Products',
-      path: '/products'
+  Product.fetchAll()
+    .then(products => {
+      res.render('shop/product-list', {
+        prods: products,
+        pageTitle: 'All Products',
+        path: '/products'
+      })
     })
-  });
+    .catch(err => console.log(err))
 }
 
 exports.getProduct = (req, res, next) => {
   const { productId } = req.params;
-  Product.findById(productId, product => {
-    if (product) {
-      return res.render('shop/product-detail', {
-        product,
-        pageTitle: product.title,
-        path: '/products'
-      })
-    }
-    return res.redirect('/products')
-  })
+  Product.findById(productId)
+    .then(product => {
+      if (product) {
+        return res.render('shop/product-detail', {
+          product,
+          pageTitle: product.title,
+          path: '/products'
+        })
+      }
+      return res.redirect('/products')
+    })
+    .catch(err => console.log(err))
 }
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll(products => {
-    res.render('shop/index', {
-      prods: products,
-      pageTitle: 'Shop',
-      path: '/'
+  Product.fetchAll()
+    .then(products => {
+      res.render('shop/index', {
+        prods: products,
+        pageTitle: 'Shop',
+        path: '/'
+      })
     })
-  });
+    .catch(err => console.log(err))
 }
 
 exports.getCart = (req, res, next) => {
