@@ -19,7 +19,7 @@ app.use(exress.static(path.join(__dirname, 'public')))
 app.use((req, res, next) => {
   User.findById("5f7942f5aa7467cee2db9256")
     .then(user => {
-      req.user = user;
+      req.user = new User(user.name, user.email, user.cart, user._id);
       next()
     })
     .catch(err => console.log(err))
