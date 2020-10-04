@@ -6,6 +6,7 @@ const shopRoutes = require('./routes/shop');
 
 const errorController = require('./controllers/error');
 const mongoConnect = require('./utils/database').mongoConnect;
+const User = require('./models/user');
 
 const app = exress();
 
@@ -14,6 +15,15 @@ app.set('views', 'views')
 
 app.use(exress.urlencoded({ extended: false }));
 app.use(exress.static(path.join(__dirname, 'public')))
+
+app.use((req, res, next) => {
+  User.findById("5f7942f5aa7467cee2db9256")
+    .then(user => {
+      req.user = user;
+      next()
+    })
+    .catch(err => console.log(err))
+})
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
