@@ -1,4 +1,4 @@
-const Product = require('../models/products');
+const Product = require('../models/product');
 
 exports.getAddProduct = (req, res, next) => {
   // res.sendFile(path.join(rootDir, 'views', 'add-product.html'))
@@ -36,9 +36,15 @@ exports.postEditProduct = (req, res, next) => {
   const updatedImageUrl = req.body.imageUrl;
   const updatedPrice = req.body.price;
   const updatedDesc = req.body.description;
-  const updateProduct = new Product(updatedTitle, updatedImageUrl, updatedPrice, updatedDesc, productId)
-  updateProduct
-    .save()
+
+  Product.findById(productId)
+    .then(product => {
+      product.title = updatedTitle
+      product.imageUrl = updatedImageUrl
+      product.price = updatedPrice
+      product.description = updatedDesc
+      return product.save()
+    })
     .then(() => {
       console.log('Product Updated!')
       res.redirect('/admin/products')
@@ -48,14 +54,13 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const { title, imageUrl, price, description } = req.body;
-  const product = new Product(
+  const product = new Product({
     title,
     imageUrl,
     price,
     description,
-    null,
-    req.user._id
-  );
+    userId: req.user
+  });
   product
     .save()
     .then(() => {
@@ -66,8 +71,11 @@ exports.postAddProduct = (req, res, next) => {
 }
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
+    // .select('title price -_id')
+    // .populate('userId', 'name')
     .then(products => {
+      // console.log(products)
       res.render('admin/products', {
         prods: products,
         pageTitle: 'Admin Products',
@@ -79,7 +87,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const { productId } = req.body;
-  Product.deleteById(productId)
+  Product.findByIdAndRemove(productId)
     .then(() => {
       console.log('DELETE PRODUCT!')
       res.redirect('/admin/products')
